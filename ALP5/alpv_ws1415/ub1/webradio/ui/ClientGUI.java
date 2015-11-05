@@ -5,6 +5,9 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
@@ -14,6 +17,8 @@ public class ClientGUI implements ClientUI{
 	private JTextField textField;
 	private JTextPane textPane;
 	private JButton buttonSend;
+	private JButton buttonQuit;
+
 
 	public ClientGUI(){
 		setUI();
@@ -24,11 +29,29 @@ public class ClientGUI implements ClientUI{
 	}
 
 	private void setUI() {
+		//mainFrame
 		frame = new JFrame("The client");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
-		frame.add(textPane = new JTextPane(), BorderLayout.CENTER);
-		frame.add(textField = new JTextField(),BorderLayout.PAGE_END);
-		frame.add(buttonSend = new JButton("SEND"),BorderLayout.EAST);
+		//TextLog to show Chat and stuff
+		textPane = new JTextPane();
+		textPane.setEditable(false);
+		JScrollPane scrollPaneLog = new JScrollPane(textPane);
+
+		
+        JPanel chatInputPanel = new JPanel();
+        chatInputPanel.setLayout(new BorderLayout());
+        chatInputPanel.add(textField = new JTextField(),BorderLayout.CENTER);
+        
+        JPanel buttonPanel = new JPanel(new BorderLayout());
+        buttonPanel.add(buttonSend = new JButton("SEND"),BorderLayout.WEST);
+        buttonPanel.add(buttonQuit = new JButton("QUIT"),BorderLayout.EAST);
+
+        chatInputPanel.add(buttonPanel,BorderLayout.EAST);
+        
+		frame.add(scrollPaneLog, BorderLayout.CENTER);
+		frame.add(chatInputPanel,BorderLayout.PAGE_END);
+
 		frame.setLocationRelativeTo( null );
 		frame.getContentPane().setPreferredSize(new Dimension(400, 400));
 

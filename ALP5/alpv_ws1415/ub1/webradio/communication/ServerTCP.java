@@ -72,10 +72,10 @@ public class ServerTCP implements Server {
 	private ServerGUI serverGUI;
 
 	// constructor
-	public ServerTCP(int port, boolean useGui) {
+	public ServerTCP(int port, boolean useGUI) {
 		this.port = port;
 		this.pool = Executors.newFixedThreadPool(poolSize);
-		if (useGui) {
+		if (useGUI) {
 			try {
 				this.serverGUI = new ServerGUI();
 			} catch (InvocationTargetException | InterruptedException e) {
@@ -267,55 +267,57 @@ public class ServerTCP implements Server {
 		public void run() {
 			System.out.printf("%n%n%n" + USAGE + "%n%n%n");
 			while (serverRunning) {
-				if (serverGUI != null) {
+				if (!serverGUI.equals(null)) {
 					synchronized (serverGUI) {
 						if (serverGUI.isServerRunning()) {
 							serverRunning = false;
 						}
 						if (serverGUI.isSongPathChanged()) {
 							try {
-								playSong(serverGUI.getNewPath());
+								setSongPath(serverGUI.getNewPath());
+								playSong(path);
 							} catch (UnsupportedAudioFileException | IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
 					}
-				}
-				try {
-					Thread.sleep(300L);
-					BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-					System.out.printf(">>");
-					String line = in.readLine();
-					if (line.equals("exit")) {
-						streamPlayer.terminate();
-						streamPlayerThread.join();
-						in.close();
-						close();
-						serverRunning = false;
-					}
-					if (line.equals("playSong")) {
-						playSong(path);
-					}
-					if (line.equals("currentSong")) {
-						System.out.println(path);
-					}
-					if (line.equals("setSongPath")) {
-						System.out.printf("Set song path to ?%n%nNew path: ");
-						setSongPath(in.readLine());
-						playSong(path);
-					}
-					if (line.equals("queueSong")) {
-						System.out.printf("Path to song to be queued ?%n%nPath : ");
-						playList.add(in.readLine());
-						System.out.printf("Current Playlist: " + playList + "%n%n");
+				} else {
+					try {
+						Thread.sleep(300L);
+						BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+						System.out.printf(">>");
+						String line = in.readLine();
+						if (line.equals("exit")) {
+							streamPlayer.terminate();
+							streamPlayerThread.join();
+							in.close();
+							close();
+							serverRunning = false;
+						}
+						if (line.equals("playSong")) {
+							playSong(path);
+						}
+						if (line.equals("currentSong")) {
+							System.out.println(path);
+						}
+						if (line.equals("setSongPath")) {
+							System.out.printf("Set song path to ?%n%nNew path: ");
+							setSongPath(in.readLine());
+							playSong(path);
+						}
+						if (line.equals("queueSong")) {
+							System.out.printf("Path to song to be queued ?%n%nPath : ");
+							playList.add(in.readLine());
+							System.out.printf("Current Playlist: " + playList + "%n%n");
 
+						}
+						if (line.equals("man")) {
+							System.out.println(USAGE);
+						}
+					} catch (Exception e) {
+						System.exit(0);
 					}
-					if (line.equals("man")) {
-						System.out.println(USAGE);
-					}
-				} catch (Exception e) {
-					System.exit(0);
 				}
 			}
 
