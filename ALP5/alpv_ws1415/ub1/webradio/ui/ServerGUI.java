@@ -1,17 +1,18 @@
 package alpv_ws1415.ub1.webradio.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-
-import alpv_ws1415.ub1.webradio.communication.ServerTCP;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
  
 
@@ -32,50 +33,74 @@ public class ServerGUI implements ServerUI {
 	private JButton b1;
 	private JButton b2;
 	
-	private int serverArgs ; 
-	private Thread server;
-
-	public ServerGUI(int arg) {
-		serverArgs = arg;
+	private volatile boolean serverRunning; 
+	private volatile boolean songPathChanged;
+	
+	private String newPath;
+	
+	public boolean isServerRunning(){
+		return serverRunning;
+	}
+	public boolean isSongPathChanged(){
+		return songPathChanged;
+	}
+	
+	public ServerGUI() throws InvocationTargetException, InterruptedException {
+		SwingUtilities.invokeAndWait(new Runnable(){
+			public void run() {
+				setUI();
+			}
+		});
+		serverRunning = true;
 	}
 
 	private void shutdownServer() {
-
+		serverRunning = false;
 	}
 
 	private class OnClickChangeSong implements ActionListener {
-	
-
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println("Click");
+			SwingUtilities.invokeLater(new Runnable() {
+			    public void run() {
+			        JFileChooser fc = new JFileChooser("./Res/Wav");
+			        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+			                ".wav", "wav");
+			            fc.setFileFilter(filter);
+			        int returnVal = fc.showOpenDialog(ServerGUI.this.frame);
+			        if (returnVal == JFileChooser.APPROVE_OPTION){
+			            System.out.println("You chose : " +
+			                    fc.getSelectedFile().getName()+ ". Good choice!");
+			            }
+			    }
+			});
+			
+			//int returnVal = fileChooser.showOpenDialog(ServerGUI.this.frame);
+			//songPathChanged = true;
+			//if (returnVal == JFileChooser.APPROVE_OPTION){
+			//	newPath = fileChooser.getSelectedFile().toPath().toString();
+			//}
 		}
+		
 
+	}
+	
+	public String getNewPath(){
+		return newPath;
 	}
 	
 	 private class OnClickShutdownServer implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			try {
-				System.setIn( new ByteArrayInputStream( "currentSong".getBytes("UTF-8") ));
-			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
+			shutdownServer();
+			System.exit(0);
 		}
 		 
 	 }
 
 	@Override
-	public void run() {
-		setUI();
-		
-		// Start the Server
-		server = new Thread(new ServerTCP(serverArgs));
-		server.start();
-
+	public void run() {		 
 	}
 
 	private void setUI() {
@@ -84,27 +109,32 @@ public class ServerGUI implements ServerUI {
 		ImageIcon changeSongIcon = new ImageIcon(ServerGUI.class.getResource("/Res/Img/changeSongIcon.gif"));
 
 		// Create and set up the window.
-		frame = new JFrame("Server");
+		frame = new JFrame("•?((¯°·._.• ǗĹŤĮϻÃŤẸ ŴẸβŘÃĎĮỖ •._.·°¯))؟•");
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo( null );
-		frame.getContentPane().setPreferredSize(new Dimension(240, 60));
-		frame.setResizable(false);
+		frame.getContentPane().setPreferredSize(new Dimension(400, 150));
+		frame.setResizable(false);	
+		frame.getContentPane().setBackground(Color.MAGENTA);
 		
 
 
 		// Create buttons
 		b1 = new JButton( shutdownServerIcon);
 		b1.setToolTipText("Click this button to shutdown server");
-		b1.setBounds(10, 10, 40, 25);
+		b1.setBounds(10, 10, 128, 128);
+		b1.setBackground(Color.CYAN);
 		
 		b2 = new JButton( changeSongIcon);
 		b2.setToolTipText("Click this button to change song streaming on server");
-		b2.setBounds(120 ,10, 40,25);
+		b2.setBounds(260 ,10, 128,128);
+		b2.setBackground(Color.CYAN);
+
 		
 		// Listener for button clicks
 		b1.addActionListener(new OnClickShutdownServer());
 		b2.addActionListener(new OnClickChangeSong());
+
 
 
 

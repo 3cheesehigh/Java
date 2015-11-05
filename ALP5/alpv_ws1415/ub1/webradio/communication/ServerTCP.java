@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,6 +25,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import alpv_ws1415.ub1.webradio.audioplayer.AudioPlayer;
+import alpv_ws1415.ub1.webradio.ui.ServerGUI;
 
 public class ServerTCP implements Server {
 	/*
@@ -63,22 +65,31 @@ public class ServerTCP implements Server {
 
 	final int poolSize = 8;
 	private volatile boolean serverRunning = true;
-	private volatile boolean keyListenerRunning = true;
 	private volatile boolean streamPlayerRunning = true;
 	private volatile boolean changeTitle = false;
 
+	// for UI
+	private ServerGUI serverGUI;
+
 	// constructor
-	public ServerTCP(int port) {
+	public ServerTCP(int port, boolean useGui) {
 		this.port = port;
 		this.pool = Executors.newFixedThreadPool(poolSize);
+		if (useGui) {
+			try {
+				this.serverGUI = new ServerGUI();
+			} catch (InvocationTargetException | InterruptedException e) {
+				System.out.printf("Somthing went horrible wrong with the server\n");
+				e.printStackTrace();
+			}
+		}
 	}
 
 	// server run
 	public void run() {
 		// New Server socket
 		try {
-			Thread listener = new Thread(new KeyListener());
-			listener.start();
+			startKeyListener();
 			System.out.printf("Starting Server\n");
 			serverSocket = new ServerSocket(port);
 			// Waiting for new client and be blocked while waiting
@@ -100,6 +111,15 @@ public class ServerTCP implements Server {
 			}
 		}
 
+	}
+
+	private void startKeyListener() {
+		try {
+			Thread listener = new Thread(new KeyListener());
+			listener.start();
+		} catch (Exception e) {
+			System.out.println("KeyListener is Pudding");
+		}
 	}
 
 	// close Server socket
@@ -246,7 +266,22 @@ public class ServerTCP implements Server {
 		@Override
 		public void run() {
 			System.out.printf("%n%n%n" + USAGE + "%n%n%n");
-			while (keyListenerRunning) {
+			while (serverRunning) {
+				if (serverGUI != null) {
+					synchronized (serverGUI) {
+						if (serverGUI.isServerRunning()) {
+							serverRunning = false;
+						}
+						if (serverGUI.isSongPathChanged()) {
+							try {
+								playSong(serverGUI.getNewPath());
+							} catch (UnsupportedAudioFileException | IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}
 				try {
 					Thread.sleep(300L);
 					BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -257,7 +292,7 @@ public class ServerTCP implements Server {
 						streamPlayerThread.join();
 						in.close();
 						close();
-						keyListenerRunning = false;
+						serverRunning = false;
 					}
 					if (line.equals("playSong")) {
 						playSong(path);

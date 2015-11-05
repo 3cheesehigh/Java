@@ -36,16 +36,12 @@ public class Main {
 			}
 
 			if(args[i].equals("server")) {
-				if(useGUI){
-					Thread gui = new Thread(new ServerGUI(Integer.parseInt(args[i+2])));
-					gui.start();
-				}else{
-				Thread server = new Thread(new ServerTCP(Integer.parseInt(args[i+2])));
+				Thread server = new Thread(new ServerTCP(Integer.parseInt(args[i+2]),useGUI));
 				server.start();
-				}
+				
 			}
 			else if(args[i].equals("client")) {
-			    Thread  client = new Thread(new ClientTCP(args[i+2],Integer.parseInt(args[i+3]),args[i+4]));
+			    Thread  client = new Thread(new ClientTCP(args[i+2],Integer.parseInt(args[i+3]),args[i+4],useGUI));
 				client.start();
 			}
 			else

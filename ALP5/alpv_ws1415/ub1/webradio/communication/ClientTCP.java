@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -11,19 +12,24 @@ import java.net.UnknownHostException;
 import javax.sound.sampled.AudioFormat;
 
 import alpv_ws1415.ub1.webradio.audioplayer.AudioPlayer;
+import alpv_ws1415.ub1.webradio.ui.ClientGUI;
 
 public class ClientTCP implements Client {
 
 	int port;
-	String addr;
-	String username;
-	Socket host;
+	private String addr;
+	private String username;
+	private Socket host;
 	private boolean musicIsPlaying;
+	private ClientGUI clientGUI ;
 
-	public ClientTCP(String addr, int port, String username) {
+	public ClientTCP(String addr, int port, String username,boolean useGUI) {
 		this.addr = addr;
 		this.username = username;
 		this.port = port;
+		if (useGUI) {
+			this.clientGUI = new ClientGUI();
+		}
 	}
 
 	@Override
