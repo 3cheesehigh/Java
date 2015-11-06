@@ -36,7 +36,6 @@ public class ServerGUI implements ServerUI {
 	// GUI frames
 	// Main menu
 	private JFrame frame;
-	private JFileChooser fileChooser; // To change the song path
 	private JButton b1;
 	private JButton b2;
 	private JButton b3;

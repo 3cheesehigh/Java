@@ -47,7 +47,7 @@ public class ClientGUI implements ClientUI {
 	private void setUI() {
 		// mainFrame
 		frame = new JFrame("The client");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		// TextLog to show Chat and stuff
 		log = new JTextArea();
