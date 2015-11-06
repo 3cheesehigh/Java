@@ -67,22 +67,13 @@ public class ServerTCP implements Server {
 	private volatile boolean serverRunning = true;
 	private volatile boolean streamPlayerRunning = true;
 	private volatile boolean changeTitle = false;
-
 	// for UI
 	private ServerGUI serverGUI;
 
 	// constructor
-	public ServerTCP(int port, boolean useGUI) {
+	public ServerTCP(int port) {
 		this.port = port;
 		this.pool = Executors.newFixedThreadPool(poolSize);
-		if (useGUI) {
-			try {
-				this.serverGUI = new ServerGUI();
-			} catch (InvocationTargetException | InterruptedException e) {
-				System.out.printf("Somthing went horrible wrong with the server\n");
-				e.printStackTrace();
-			}
-		}
 	}
 
 	// server run
@@ -126,13 +117,7 @@ public class ServerTCP implements Server {
 	@Override
 	public void close() {
 		serverRunning = false;
-		try {
-			// closeOnAllClients();
-			serverSocket.close();
-		} catch (IOException e) {
-			System.out.println("Error while closing ServerSocket");
-			e.printStackTrace();
-		}
+
 	}
 
 	public void closeOnAllClients() throws IOException {
@@ -152,6 +137,10 @@ public class ServerTCP implements Server {
 	 */
 	public void setSongPath(String string) {
 		path = string;
+	}
+
+	public String getSongPath() {
+		return path;
 	}
 
 	public void playSong(String path) throws MalformedURLException, UnsupportedAudioFileException, IOException {
@@ -265,60 +254,45 @@ public class ServerTCP implements Server {
 	class KeyListener implements Runnable {
 		@Override
 		public void run() {
-			System.out.printf("%n%n%n" + USAGE + "%n%n%n");
-			while (serverRunning) {
-				if (!serverGUI.equals(null)) {
-					synchronized (serverGUI) {
-						if (serverGUI.isServerRunning()) {
-							serverRunning = false;
-						}
-						if (serverGUI.isSongPathChanged()) {
-							try {
-								setSongPath(serverGUI.getNewPath());
-								playSong(path);
-							} catch (UnsupportedAudioFileException | IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
-				} else {
-					try {
-						Thread.sleep(300L);
-						BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-						System.out.printf(">>");
-						String line = in.readLine();
-						if (line.equals("exit")) {
-							streamPlayer.terminate();
-							streamPlayerThread.join();
-							in.close();
-							close();
-							serverRunning = false;
-						}
-						if (line.equals("playSong")) {
-							playSong(path);
-						}
-						if (line.equals("currentSong")) {
-							System.out.println(path);
-						}
-						if (line.equals("setSongPath")) {
-							System.out.printf("Set song path to ?%n%nNew path: ");
-							setSongPath(in.readLine());
-							playSong(path);
-						}
-						if (line.equals("queueSong")) {
-							System.out.printf("Path to song to be queued ?%n%nPath : ");
-							playList.add(in.readLine());
-							System.out.printf("Current Playlist: " + playList + "%n%n");
 
-						}
-						if (line.equals("man")) {
-							System.out.println(USAGE);
-						}
-					} catch (Exception e) {
-						System.exit(0);
+			while (serverRunning) {
+				System.out.printf("%n%n%n" + USAGE + "%n%n%n");
+				try {
+					Thread.sleep(300L);
+					BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+					System.out.printf(">>");
+					String line = in.readLine();
+					if (line.equals("exit")) {
+						streamPlayer.terminate();
+						streamPlayerThread.join();
+						in.close();
+						close();
+						serverRunning = false;
 					}
+					if (line.equals("playSong")) {
+						playSong(path);
+					}
+					if (line.equals("currentSong")) {
+						System.out.println(path);
+					}
+					if (line.equals("setSongPath")) {
+						System.out.printf("Set song path to ?%n%nNew path: ");
+						setSongPath(in.readLine());
+						playSong(path);
+					}
+					if (line.equals("queueSong")) {
+						System.out.printf("Path to song to be queued ?%n%nPath : ");
+						playList.add(in.readLine());
+						System.out.printf("Current Playlist: " + playList + "%n%n");
+
+					}
+					if (line.equals("man")) {
+						System.out.println(USAGE);
+					}
+				} catch (Exception e) {
+					System.exit(0);
 				}
+
 			}
 
 		}
@@ -374,6 +348,7 @@ public class ServerTCP implements Server {
 							}
 						}
 					}
+					fis.close();
 
 				} catch (FileNotFoundException e) {
 					System.out.printf("Couldn't find  %s .\n", path);

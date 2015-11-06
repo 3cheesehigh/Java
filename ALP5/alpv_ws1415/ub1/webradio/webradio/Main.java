@@ -1,7 +1,10 @@
 package alpv_ws1415.ub1.webradio.webradio;
+import java.lang.reflect.InvocationTargetException;
+
 //another line test
 import alpv_ws1415.ub1.webradio.communication.ClientTCP;
 import alpv_ws1415.ub1.webradio.communication.ServerTCP;
+import alpv_ws1415.ub1.webradio.ui.ClientGUI;
 import alpv_ws1415.ub1.webradio.ui.ServerGUI;
 
 public class Main {
@@ -15,8 +18,10 @@ public class Main {
 	 * just the command-line according to the given arguments.
 	 * 
 	 * @param args
+	 * @throws InterruptedException 
+	 * @throws InvocationTargetException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InvocationTargetException, InterruptedException {
 		try {
 			boolean useGUI = false;
 			int i = -1;
@@ -36,12 +41,22 @@ public class Main {
 			}
 
 			if(args[i].equals("server")) {
-				Thread server = new Thread(new ServerTCP(Integer.parseInt(args[i+2]),useGUI));
+				int port = Integer.parseInt(args[i+2]);
+				if (useGUI){
+					new ServerGUI(port);
+				}
+				Thread server = new Thread(new ServerTCP(port));
 				server.start();
 				
 			}
 			else if(args[i].equals("client")) {
-			    Thread  client = new Thread(new ClientTCP(args[i+2],Integer.parseInt(args[i+3]),args[i+4],useGUI));
+				int port = Integer.parseInt(args[i+3]);
+				String ip = args[i+2];
+				String username = args[i+4];
+				if (useGUI){
+					new ClientGUI(ip, port, username);
+				}
+			    Thread  client = new Thread(new ClientTCP(ip,port,username));
 				client.start();
 			}
 			else

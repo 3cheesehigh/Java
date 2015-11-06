@@ -21,34 +21,34 @@ public class ClientTCP implements Client {
 	private String username;
 	private Socket host;
 	private boolean musicIsPlaying;
-	private ClientGUI clientGUI ;
 
-	public ClientTCP(String addr, int port, String username,boolean useGUI) {
+	public ClientTCP(String addr, int port, String username) {
 		this.addr = addr;
 		this.username = username;
 		this.port = port;
-		if (useGUI) {
-			this.clientGUI = new ClientGUI();
-		}
+
 	}
+	public String getUsername(){return username;}
 
 	@Override
 	public void run() {
 		// connects to server
 		try {
 			InetSocketAddress sockAddr = new InetSocketAddress(addr, port);
+
 			connect(sockAddr);
+
 			// Hello World receiving and printing
 			InputStreamReader serverIn = new InputStreamReader(host.getInputStream());
 			BufferedReader bufferedReader = new BufferedReader(serverIn);
 			char[] buffer = new char[100];
 			int nRead = bufferedReader.read(buffer, 0, 100);
 			System.out.println(new String(buffer, 0, nRead));
-			
+
 			// Get the AudioFormat
 			System.out.println("Getting audioformat");
 			DataInputStream din = new DataInputStream(host.getInputStream());
-			String[] farr =din.readUTF().split(",");
+			String[] farr = din.readUTF().split(",");
 			AudioFormat audioFormat = new AudioFormat(Float.parseFloat(farr[1]), Integer.parseInt(farr[2]),
 					Integer.parseInt(farr[3]), true, Boolean.parseBoolean(farr[5]));
 			System.out.print("The audioformat: " + audioFormat + '\n');
@@ -58,9 +58,9 @@ public class ClientTCP implements Client {
 			audioPlayer.start();
 
 			// Play Music
-			while(musicIsPlaying){
+			while (musicIsPlaying) {
 				byte[] nData = readPacket(din);
-				if (nData != null){
+				if (nData != null) {
 					audioPlayer.writeBytes(nData);
 				}
 			}
@@ -76,29 +76,31 @@ public class ClientTCP implements Client {
 			e.printStackTrace();
 			close();
 		}
+
 	}
 
 	private byte[] readPacket(DataInputStream din) {
-		int packetLen 	= 0;
-		byte[] data 	= null;
-	
+		int packetLen = 0;
+		byte[] data = null;
+
 		try {
 			// Get packet length
 			packetLen = din.readInt();
 
 			// Create data buffer
-			data = new byte[packetLen];			
+			data = new byte[packetLen];
 			if (packetLen > 0)
 				din.readFully(data);
-	
+
 			return data;
 		} catch (Exception e) {
 			System.out.printf("Lost connection to server\n");
-			musicIsPlaying = false; 
+			musicIsPlaying = false;
 			return null;
 		}
-		
+
 	}
+
 	@Override
 	public void connect(InetSocketAddress serverAddress) throws IOException {
 		// connects to server

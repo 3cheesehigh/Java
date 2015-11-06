@@ -7,3 +7,8 @@
 /ServerUI.class
 /ServerGUI$OnClickChangeSong$1.class
 /ServerGUI$1.class
+/OnClickPlaySong.class
+/ServerGUI$OnClickPlaySong.class
+/ClientGUI$1.class
+/ClientGUI$OnClickShutdownServer.class
+/ClientGUI$OnClickQuitClient.class
