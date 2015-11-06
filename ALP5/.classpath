@@ -3,5 +3,7 @@
 	<classpathentry kind="src" path=""/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="protobuf-java-2.5.0.jar"/>
+	<classpathentry kind="lib" path="Res/Wav/Friday.wav"/>
+	<classpathentry kind="lib" path="Res/Wav/music.wav"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

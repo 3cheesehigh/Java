@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import alpv_ws1415.ub1.webradio.communication.ClientTCP;
 
 public class ClientGUI implements ClientUI {
+	
 
 	private JFrame frame;
 	private JTextField textField;
@@ -70,12 +71,13 @@ public class ClientGUI implements ClientUI {
 
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setPreferredSize(new Dimension(400, 400));
-		
+
 		buttonQuit.addActionListener(new OnClickQuitClient());
 
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
+		
 	}
 
 	@Override
@@ -86,14 +88,16 @@ public class ClientGUI implements ClientUI {
 
 	@Override
 	public void pushChatMessage(String message) {
-		log.append(message+"\n");
+		log.append(message + "\n");
 	}
-	
+
 	private class OnClickQuitClient implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			client.close();
+			if (client.socketIsOpen()) {
+				client.close();
+			}
 			System.exit(0);
 		}
 

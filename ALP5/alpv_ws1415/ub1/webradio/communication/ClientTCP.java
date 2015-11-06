@@ -27,6 +27,10 @@ public class ClientTCP implements Client {
 
 	}
 	public String getUsername(){return username;}
+	
+	public boolean socketIsOpen(){
+		return !host.isClosed();
+	}
 
 	@Override
 	public void run() {

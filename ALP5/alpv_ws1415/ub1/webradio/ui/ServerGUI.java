@@ -44,7 +44,7 @@ public class ServerGUI implements ServerUI {
 	private String titleName = "•?((¯°·._.• ǗĹŤĮϻÃŤẸ ŴẸβŘÃĎĮỖ •._.·°¯))؟•";
 
 	private volatile boolean songPathChanged;
-
+	private final String welcome = "Please choose a song and press Play";
 	private volatile String newPath;
 
 
@@ -61,6 +61,7 @@ public class ServerGUI implements ServerUI {
 				setUI();
 			}
 		});
+
 	}
 
 
@@ -145,6 +146,8 @@ public class ServerGUI implements ServerUI {
 		log = new JTextArea();
 		log.setEditable(false);
 		log.setMargin(new Insets(5, 5, 5, 5));
+		log.append(welcome);
+
 		JScrollPane scrollPaneLog = new JScrollPane(log);
 
 		// Create buttons
@@ -181,6 +184,8 @@ public class ServerGUI implements ServerUI {
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
+		
+	
 	}
 
 	public void printToLog(String string) {
