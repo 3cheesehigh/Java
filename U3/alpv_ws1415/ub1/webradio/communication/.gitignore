@@ -9,3 +9,6 @@
 /ServerTCP.class
 /ServerUDP.class
 /ClientUDP.class
+/ServerUDP$ClientHandler.class
+/ServerUDP$ClientListener.class
+/ServerUDP$StreamPlayer.class

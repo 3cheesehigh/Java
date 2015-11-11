@@ -190,6 +190,7 @@ public class ClientTCP implements Client {
 						}
 						if (gui.clientShutdown()) {
 							clientRunning = false;
+							sendChatMessage("exit()");
 							close();
 						}
 					}

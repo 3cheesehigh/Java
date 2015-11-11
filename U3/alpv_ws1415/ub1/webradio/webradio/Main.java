@@ -4,7 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 
 //another line test
 import alpv_ws1415.ub1.webradio.communication.ClientTCP;
+import alpv_ws1415.ub1.webradio.communication.ClientUDP;
 import alpv_ws1415.ub1.webradio.communication.ServerTCP;
+import alpv_ws1415.ub1.webradio.communication.ServerUDP;
 import alpv_ws1415.ub1.webradio.ui.ClientGUI;
 import alpv_ws1415.ub1.webradio.ui.ServerGUI;
 
@@ -84,6 +86,7 @@ public class Main {
 
 			} else
 				throw new IllegalArgumentException();
+			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.err.println(USAGE);
 		} catch (NumberFormatException e) {

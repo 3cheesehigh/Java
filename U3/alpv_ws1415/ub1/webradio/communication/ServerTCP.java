@@ -63,15 +63,16 @@ public class ServerTCP implements Server {
 	private AudioPlayer audioPlayer;
 	private AudioInputStream ais;
 	private volatile Collection<ClientHandler> clients = new ArrayList<ClientHandler>();
-	private ExecutorService pool;
-	private boolean musicIsPlaying = false;
+	
+	
 	private Thread streamPlayerThread = null;
 	private StreamPlayer streamPlayer = null;
-
+	private ExecutorService pool;
 	final int poolSize = 8;
 	private volatile boolean serverRunning = true;
 	private volatile boolean streamPlayerRunning = true;
 	private volatile boolean changeTitle = false;
+	private boolean musicIsPlaying = false;
 	// for UI
 	private ServerGUI serverGUI;
 
