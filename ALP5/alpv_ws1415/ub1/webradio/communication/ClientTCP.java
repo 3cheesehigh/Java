@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+<<<<<<< HEAD
 import java.lang.reflect.InvocationTargetException;
+=======
+>>>>>>> origin/master
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -12,7 +15,10 @@ import java.net.UnknownHostException;
 import javax.sound.sampled.AudioFormat;
 
 import alpv_ws1415.ub1.webradio.audioplayer.AudioPlayer;
+<<<<<<< HEAD
 import alpv_ws1415.ub1.webradio.ui.ClientGUI;
+=======
+>>>>>>> origin/master
 
 public class ClientTCP implements Client {
 
@@ -29,6 +35,13 @@ public class ClientTCP implements Client {
 
 	}
 	public String getUsername(){return username;}
+<<<<<<< HEAD
+=======
+	
+	public boolean socketIsOpen(){
+		return !host.isClosed();
+	}
+>>>>>>> origin/master
 
 	@Override
 	public void run() {

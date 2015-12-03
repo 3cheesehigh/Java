@@ -19,6 +19,10 @@ import javax.swing.SwingUtilities;
 import alpv_ws1415.ub1.webradio.communication.ClientTCP;
 
 public class ClientGUI implements ClientUI {
+<<<<<<< HEAD
+=======
+	
+>>>>>>> origin/master
 
 	private JFrame frame;
 	private JTextField textField;
@@ -47,7 +51,11 @@ public class ClientGUI implements ClientUI {
 	private void setUI() {
 		// mainFrame
 		frame = new JFrame("The client");
+<<<<<<< HEAD
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+=======
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+>>>>>>> origin/master
 		frame.setLayout(new BorderLayout());
 		// TextLog to show Chat and stuff
 		log = new JTextArea();
@@ -70,12 +78,20 @@ public class ClientGUI implements ClientUI {
 
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setPreferredSize(new Dimension(400, 400));
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> origin/master
 		buttonQuit.addActionListener(new OnClickQuitClient());
 
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
+<<<<<<< HEAD
+=======
+		
+>>>>>>> origin/master
 	}
 
 	@Override
@@ -86,14 +102,26 @@ public class ClientGUI implements ClientUI {
 
 	@Override
 	public void pushChatMessage(String message) {
+<<<<<<< HEAD
 		log.append(message+"\n");
 	}
 	
+=======
+		log.append(message + "\n");
+	}
+
+>>>>>>> origin/master
 	private class OnClickQuitClient implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 			client.close();
+=======
+			if (client.socketIsOpen()) {
+				client.close();
+			}
+>>>>>>> origin/master
 			System.exit(0);
 		}
 

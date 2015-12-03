@@ -36,7 +36,10 @@ public class ServerGUI implements ServerUI {
 	// GUI frames
 	// Main menu
 	private JFrame frame;
+<<<<<<< HEAD
 	private JFileChooser fileChooser; // To change the song path
+=======
+>>>>>>> origin/master
 	private JButton b1;
 	private JButton b2;
 	private JButton b3;
@@ -45,7 +48,11 @@ public class ServerGUI implements ServerUI {
 	private String titleName = "•?((¯°·._.• ǗĹŤĮϻÃŤẸ ŴẸβŘÃĎĮỖ •._.·°¯))؟•";
 
 	private volatile boolean songPathChanged;
+<<<<<<< HEAD
 
+=======
+	private final String welcome = "Please choose a song and press Play";
+>>>>>>> origin/master
 	private volatile String newPath;
 
 
@@ -62,6 +69,10 @@ public class ServerGUI implements ServerUI {
 				setUI();
 			}
 		});
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 	}
 
 
@@ -146,6 +157,11 @@ public class ServerGUI implements ServerUI {
 		log = new JTextArea();
 		log.setEditable(false);
 		log.setMargin(new Insets(5, 5, 5, 5));
+<<<<<<< HEAD
+=======
+		log.append(welcome);
+
+>>>>>>> origin/master
 		JScrollPane scrollPaneLog = new JScrollPane(log);
 
 		// Create buttons
@@ -182,6 +198,11 @@ public class ServerGUI implements ServerUI {
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
+<<<<<<< HEAD
+=======
+		
+	
+>>>>>>> origin/master
 	}
 
 	public void printToLog(String string) {

@@ -45,8 +45,12 @@ public class ServerTCP implements Server {
 
 	// Strings
 	private String hello = "Hello World";
+<<<<<<< HEAD
 	private String path = ".\\Res\\Wav\\music.wav"; // TODO Change to get wav
 													// from classRessources
+=======
+	private String path = ServerTCP.class.getResource("/Res/Wav/music.wav").getPath(); 
+>>>>>>> origin/master
 	private String USAGE = "USAGE: %n%nType 'exit' to shutdown server,%n" + ", 'playSong' to start musicstream%n"
 			+ ", 'currentSong' for current playing song%n" + ", 'queueSong' to queue a Song%n"
 			+ "or 'setSongPath' to change song path";
