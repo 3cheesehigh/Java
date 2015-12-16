@@ -34,6 +34,7 @@ public class MyMaster extends UnicastRemoteObject implements Server, Master {
 		synchronized (workerList) {
 			System.out.println("Registering worker ");
 			workerList.add(w);
+			//TODO Implement looking for a jaaab
 		}
 	}
 
@@ -51,13 +52,13 @@ public class MyMaster extends UnicastRemoteObject implements Server, Master {
 			throws RemoteException {
 
 		// create two pools
-		Pool<Argument> argpool = new MyPool<Argument>();
-		Pool<Result> respool = new MyPool<Result>();
+		Pool<Argument> argpool = new MyPool<>();
+		Pool<Result> respool = new MyPool<>();
 		
 		synchronized (workerList) {
 			j.split(argpool, workerList.size());			
 		}
-		
+		System.out.println(argpool.size());
 		// adds job to queue 
 		this.jobQueue.add(new queuedJob(j, respool, argpool));
 		
@@ -81,8 +82,8 @@ public class MyMaster extends UnicastRemoteObject implements Server, Master {
 				if(!(jobQueue.isEmpty())){
 					System.out.println("JobHandler: Getting next Job");
 					queuedJob nextJob = jobQueue.poll();
-					Job job = nextJob.getJ();
-					Pool respool = nextJob.getRespool();
+					Job  job = nextJob.getJ();
+					Pool respool   = nextJob.getRespool();
 					Pool argpool = nextJob.getArgpool();
 					
 					// Start the workers			
@@ -94,7 +95,8 @@ public class MyMaster extends UnicastRemoteObject implements Server, Master {
 					}
 					System.out.println("JobHandler: Merging");						
 					job.merge(respool);							//Remote Future will be updated inside merge defined by the client							
-					
+					System.out.println("JobHandler: Merging end");						
+
 				}
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -114,7 +116,7 @@ public class MyMaster extends UnicastRemoteObject implements Server, Master {
 		private Pool argpool;
 
 
-		public queuedJob(Job j, Pool respool, Pool argpool) {
+		public queuedJob(Job j, Pool  respool, Pool argpool) {
 			super();
 			this.j = j;
 			this.respool = respool;

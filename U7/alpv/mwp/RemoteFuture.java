@@ -17,7 +17,7 @@ public interface RemoteFuture<ReturnObject> extends Remote {
 	 */
 	ReturnObject get() throws RemoteException;
 
-	boolean isFinished();
+	boolean isFinished() throws RemoteException;
 
 
 }

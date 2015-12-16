@@ -1,19 +1,16 @@
 package alpv.mwp;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
-public class textChunk extends UnicastRemoteObject{
+public interface TextChunk extends Remote{
 
-	
+	String getSearchedString() throws RemoteException;
 
-	private static final long serialVersionUID = 1L;
-	String searchedString;
-	String[] strings;
-	
-	
-	public textChunk(String searchedString, String[] strings) throws RemoteException{
-		this.searchedString = searchedString;
-		this.strings = strings;
-	}
+	void setSearchedString(String searchedString)throws RemoteException;
+
+	String[] getStrings() throws RemoteException;
+
+	void setStrings(String[] strings) throws RemoteException;
+
 }

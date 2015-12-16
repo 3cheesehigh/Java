@@ -11,19 +11,26 @@ public class MyRemoteFuture extends UnicastRemoteObject implements RemoteFuture<
 	private boolean isFinished;
 	private int result;
 	
+	public MyRemoteFuture() throws RemoteException{
+		isFinished =false;
+	}
+	
+	
 	public boolean isFinished() {
 		return isFinished;
 	}
+	
+
 	public void setFinished(boolean isFinished) {
 		this.isFinished = isFinished;
 	}
 
+
 	public void setResult(int result) {
 		this.result = result;
 	}
-	public MyRemoteFuture() throws RemoteException{
-		isFinished =false;
-	}
+	
+
 	@Override
 	public Integer get() throws RemoteException {
 		return result;

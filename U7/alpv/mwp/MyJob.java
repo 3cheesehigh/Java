@@ -3,26 +3,26 @@ package alpv.mwp;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
-public class MyJob implements Job<textChunk, Integer, Integer> {
+public class MyJob implements Job<TextChunk, Integer,Integer > {
 
 	
 	private static final long serialVersionUID = 1L;
 	private String text;
-	private Task task;
+	private Task<TextChunk, Integer> task;
 	private final static int ARGUMENTEPERWORKER = 3;
 	private String searchedString;
 	private int argSize;
 	private MyRemoteFuture rf;
 	
 	//Constructor
-	public MyJob(String text,String searchedString, Task task){
+	public MyJob(String text,String searchedString, Task<TextChunk, Integer> task){
 		this.text=text;
 		this.task = task;
 		this.searchedString = searchedString;		
 	}
 	
 	@Override
-	public Task<textChunk, Integer> getTask() {
+	public Task<TextChunk, Integer> getTask() {
 		return task;
 	}
 
@@ -39,20 +39,21 @@ public class MyJob implements Job<textChunk, Integer, Integer> {
 	}
 
 	@Override
-	public void split(Pool<textChunk> argPool, int workerCount) {
+	public void split(Pool<TextChunk> argPool, int workerCount) {
 	
 		String[] textList = text.split(" ");
 		int number = textList.length / workerCount * ARGUMENTEPERWORKER;
-		
-		for (int i = 0; i < textList.length; i += number) {
+		for (int i = 0; i < textList.length; i += number) 
 			// Create arguments
-			textChunk arg;
+			TextChunk arg;
+			
 			try {
 			if (i+ number > textList.length){
-				arg = new textChunk(searchedString, Arrays.copyOfRange(textList, i, textList.length));
+				arg = new MyTextChunk(searchedString, Arrays.copyOfRange(textList, i, textList.length));
+				argPool.put(arg);
 			}
 			else
-				arg = new textChunk(searchedString, Arrays.copyOfRange(textList, i, number + i));	
+				arg = new MyTextChunk(searchedString, Arrays.copyOfRange(textList, i, number + i));	
 			
 				argPool.put(arg);
 			} catch (RemoteException e) {
