@@ -29,31 +29,14 @@ public class RenderClient {
 			
 			RemoteFuture<File> rf =  server.doJob(newJob);
 			
-			File result = File.createTempFile("alpiv",".pix");
 			//Creates a temp file and updates it when RemoteFuture returns a new Strip
 			while(!rf.isFinished()){
-				/*
-				if (rf.get().length != 0) { //TODO Maybe does not work like this
-					System.out.println("Result update, got new stripe");
-					byte[] writeToFile = rf.get();
-			        OutputStream outs = null;
-			        try {
-			            outs = new FileOutputStream(result);
-			        } catch(IOException ex)
-			        {
-			            ex.printStackTrace();
-			            throw new RuntimeException("Cannot open the output file "+result);
-			        }
-			        String hdr = rf.getHdr();
-		            BufferedWriter wOut = new BufferedWriter(new OutputStreamWriter(outs));
-		            wOut.write(hdr,0,hdr.length());
-		            wOut.flush();
-			        outs.write(writeToFile);
-			        outs.flush();
-					
-		        	GUI.display(result.getCanonicalPath());
-
-				}*/
+			
+				if (rf.get()!= null) { //TODO Maybe does not work like this
+					System.out.println("Result update, got new stripe");			
+		        	//GUI.display(rf.get().getCanonicalPath());
+		        	
+				}
 			}
 			System.out.println("Got the final result");
 			GUI.display(rf.get().getCanonicalPath());

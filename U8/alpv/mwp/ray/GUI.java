@@ -17,6 +17,10 @@ import javax.swing.*;
  * where file is a ".pix" file.
  */
 public class GUI {
+	static boolean visible = false;
+	static ImagePanel image = null;
+	static DisplayFrame display = null;
+	
 	private static class DisplayFrame extends JFrame {
 
 		private static final long serialVersionUID = 4822111026232940929L;
@@ -43,10 +47,16 @@ public class GUI {
 		Image image;
 		String imageName;
 		Dimension dimension;
+		int width;
+		int height;
+		int[] pix;
 
 		ImagePanel(String imageName, int width, int height, int[] pix) {
 			this.imageName = imageName;
-
+			this.width = width;
+			this.height = height;
+			this.pix = pix;
+			
 			source = new MemoryImageSource(width, height, pix, 0, width);
 			image = createImage(source);
 
@@ -64,11 +74,16 @@ public class GUI {
 		public Dimension getPreferredSize() {
 			return dimension;
 		}
+		public void setNewImage(int width, int height, int[] pix) {
+			MemoryImageSource source = new MemoryImageSource(this.width, this.height, pix, 0, this.width);
+			image = createImage(source);
+		}
 	}
 
 	public static void display(String file) throws IOException {
 		BufferedInputStream in;
 		String imageName = "";
+
 
 		try {
 			in = new BufferedInputStream(new FileInputStream(file));
@@ -93,18 +108,21 @@ public class GUI {
 			pix = new int[width * height];
 
 			for (int i = 0; i != pix.length; i++) {
-				pix[i] = (255 << 24) | (in.read() << 16) | (in.read() << 8)
-						| (in.read());
+				pix[i] = (255 << 24) | (in.read() << 16) | (in.read() << 8) | (in.read());
 			}
 		} else {
 			throw new IOException("Unknown image type");
 		}
-
-		ImagePanel image = new ImagePanel(imageName, width, height, pix);
-		DisplayFrame display = new DisplayFrame(image);
-
-		display.pack();
-		display.setVisible(true);
+		if (!visible) {
+			visible = true;
+			image = new ImagePanel(imageName, width, height, pix);
+			display = new DisplayFrame(image);
+			display.pack();
+			display.setVisible(true);
+		}else{
+			image.setNewImage(width, height, pix);
+			display.repaint();
+		}
 	}
 
 	static final byte LF = 0x0A;
