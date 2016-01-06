@@ -8,4 +8,6 @@ public interface FileChunk extends Remote {
 	byte[] getFilePart() throws RemoteException;
 	
 	int getPartStart() throws RemoteException;
+	
+	int getPartEnd() throws RemoteException;
 }

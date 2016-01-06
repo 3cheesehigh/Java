@@ -27,7 +27,7 @@ public class RenderTask implements Task<Stripe,FileChunk> {
         
         FileChunk result = null;
 		try {
-			result = new MyFileChunk(part.toByteArray(),renderStripe.getStripeStart());
+			result = new RenderFileChunk(part.toByteArray(),renderStripe.getStripeStart(),renderStripe.getStripeEnd());
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -75,7 +75,7 @@ public class GUI {
 			return dimension;
 		}
 		public void setNewImage(int width, int height, int[] pix) {
-			MemoryImageSource source = new MemoryImageSource(this.width, this.height, pix, 0, this.width);
+			MemoryImageSource source = new MemoryImageSource(width, height, pix, 0, width);
 			image = createImage(source);
 		}
 	}
@@ -115,7 +115,7 @@ public class GUI {
 		}
 		if (!visible) {
 			visible = true;
-			image = new ImagePanel(imageName, width, height, pix);
+			image = new ImagePanel(imageName, 800, 800, pix);
 			display = new DisplayFrame(image);
 			display.pack();
 			display.setVisible(true);
