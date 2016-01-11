@@ -39,7 +39,6 @@ public class RenderJob implements Job<Stripe, FileChunk, ArrayList<FileChunk>> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// TODO Auto-generated method stub
 		return rf;
 	}
 
@@ -95,19 +94,20 @@ public class RenderJob implements Job<Stripe, FileChunk, ArrayList<FileChunk>> {
 					fileChunkList.add(resPool.get());
 					rf.setList(fileChunkList);
 					argSize--;
-				} else if (0 == argSize)
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				} else if (0 == argSize){ // Updates final result status and sets
+					Thread.sleep(5000);
 					rf.setFinished(true);
+									// RemoteFuture
+				}
 			}
 
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

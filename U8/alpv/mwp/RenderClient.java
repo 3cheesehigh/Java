@@ -1,5 +1,6 @@
 package alpv.mwp;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,24 +35,13 @@ public class RenderClient {
 
 			this.server = (Server) reg.lookup("MyMaster");
 			System.out.println("Client starting job.");
-			Job<Stripe, FileChunk, ArrayList<FileChunk>> newJob = new RenderJob(); // When
-																					// fails
-																					// swap
-																					// File
-																					// for
-																					// Array
-																					// of
-																					// byte[]
-																					// and
-																					// build
-																					// in
-																					// Client
+			Job<Stripe, FileChunk, ArrayList<FileChunk>> newJob = new RenderJob(); // When fails swap File for Array of byte[] and build in Client
 
 			RemoteFuture<ArrayList<FileChunk>> rf = server.doJob(newJob);
 			PlayModemSound play = new PlayModemSound();
 			Thread playThread = new Thread(play);
 			playThread.start();
-			
+
 			while (!rf.isFinished()) {
 				// Creates a temp file and updates it when RemoteFuture returns
 				// a new Strip
@@ -59,7 +49,7 @@ public class RenderClient {
 				// create temporary file
 				try {
 					outF = File.createTempFile("alpiv", ".pix");
-
+				
 				} catch (IOException ex) {
 					ex.printStackTrace();
 					throw new RuntimeException("Cannot create a temporary file.");
@@ -72,15 +62,14 @@ public class RenderClient {
 					ex.printStackTrace();
 					throw new RuntimeException("Cannot open the output file " + outF);
 				}
-				if (rf.get() != null) { // TODO Maybe does not work like this
 
+				if (rf.get() != null) { 
 					System.out.println("BEEP BOOP BEEBEE BOOP KRRRRRR");
 
-					// TODO: könnte klappen muss aber nicht; stripes
-					// absteigend-sortieren
 					fileChunkList = rf.get();
 				}
 				fileChunkList.sort(new Comparator<FileChunk>() {
+					
 					@Override
 					public int compare(FileChunk o1, FileChunk o2) {
 						try {
@@ -102,7 +91,7 @@ public class RenderClient {
 				int heightSum = 0;
 				for (FileChunk fileChunk : fileChunkList) {
 
-					heightSum += fileChunk.getPartEnd() - fileChunk.getPartStart();
+					heightSum += Math.abs(fileChunk.getPartEnd() - fileChunk.getPartStart());
 				}
 
 				String hdr = "RGB\n" + TOTALIMAGEWIDTH + " " + (heightSum) + " 8 8 8\n";
@@ -116,7 +105,6 @@ public class RenderClient {
 				}
 
 				outs.close();
-
 				GUI.display(outF.getCanonicalPath());
 
 			}
@@ -128,7 +116,6 @@ public class RenderClient {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		} catch (
 
 		RemoteException e1)
@@ -150,7 +137,7 @@ public class RenderClient {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public class PlayModemSound implements Runnable {
 
 		private volatile boolean running = true;
@@ -158,13 +145,12 @@ public class RenderClient {
 		public void run() {
 			
 				try {
-					File yourFile = new File("loopsound.wav");
 					AudioInputStream stream;
 					AudioFormat format;
 					DataLine.Info info;
 					Clip clip;
 
-					stream = AudioSystem.getAudioInputStream(yourFile);
+					stream = AudioSystem.getAudioInputStream(new BufferedInputStream(ClassLoader.getSystemResourceAsStream("wav/loopsound.wav")));
 					format = stream.getFormat();
 					info = new DataLine.Info(Clip.class, format);
 					clip = (Clip) AudioSystem.getLine(info);
@@ -190,4 +176,6 @@ public class RenderClient {
 		}
 		
 	}
+
+
 }
