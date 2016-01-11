@@ -1,4 +1,4 @@
-package alpv.mwp;
+package alpv.mwp.ray;
 
 import java.io.File;
 import java.io.OutputStream;

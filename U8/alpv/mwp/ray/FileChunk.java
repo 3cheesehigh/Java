@@ -1,4 +1,4 @@
-package alpv.mwp;
+package alpv.mwp.ray;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

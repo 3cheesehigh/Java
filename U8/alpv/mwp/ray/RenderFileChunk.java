@@ -1,4 +1,4 @@
-package alpv.mwp;
+package alpv.mwp.ray;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
